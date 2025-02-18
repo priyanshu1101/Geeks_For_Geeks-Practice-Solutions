@@ -10,13 +10,14 @@ using namespace std;
 class Solution {
   public:
     // Function to sort the array using bubble sort algorithm.
+    void sortOnce(vector<int>& arr,int start,int till){
+        if(start>=till) return;
+        if(arr[start]>arr[till]) swap(arr[start],arr[till]);
+        sortOnce(arr,start+1,till);
+    }
     void bubbleSort(vector<int>& arr) {
         for(int i=0;i<arr.size();i++){
-            for(int j=0;j<arr.size()-i-1;j++){
-                if(arr[j]>arr[j+1]){
-                    swap(arr[j],arr[j+1]);
-                }
-            }
+            sortOnce(arr,0,arr.size()-i-1);
         }
     }
 };
