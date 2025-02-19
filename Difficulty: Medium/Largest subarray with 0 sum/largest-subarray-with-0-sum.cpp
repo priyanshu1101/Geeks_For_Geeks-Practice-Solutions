@@ -8,20 +8,17 @@ using namespace std;
 
 class Solution {
   public:
-    int maxLen(vector<int>& arr) {
+    int maxLen(vector<int>& nums) {
+        unordered_map<int,int> mp;
         int ans=0;
-        vector<int> continuousSumArr(arr.size(),0);
-        int sum=0;
-        for(int i=0;i<arr.size();i++){
-            sum+=arr[i];
-            continuousSumArr[i]=sum;
-        }
-        unordered_map<int,int> mp={{0,0}};
-        for(int i=0;i<continuousSumArr.size();i++){
-            if(mp.find(continuousSumArr[i])!=mp.end()){
-                ans=max(ans,i+1-mp[continuousSumArr[i]]);
+        int sum = 0;
+        mp[0]=-1;
+        for(int i=0;i<nums.size();i++){
+            sum+=nums[i];
+            if(mp.find(sum)!=mp.end()){
+                ans=max(ans,i-mp[sum]);
             }else{
-                mp[continuousSumArr[i]]=i+1;
+                mp[sum]=i;
             }
         }
         return ans;
