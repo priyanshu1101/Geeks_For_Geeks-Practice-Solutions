@@ -63,22 +63,18 @@ class DLLNode {
         this->next = NULL;
         this->prev = NULL;
     }
-};
+}; // 1 ...
 */
 class Solution {
   public:
     // Function to reverse a doubly linked list
     DLLNode* reverseDLL(DLLNode* head) {
-        DLLNode* last=head;
-        while(head){
-            DLLNode* prev=head->prev;
-            DLLNode* next=head->next;
-            head->prev=next;
-            head->next=prev;
-            if(next==NULL) return head;
-            head=next;
-        }
-        return NULL;
+       if(!head || !head->next) return head; 
+       DLLNode* newHead = reverseDLL(head->next);
+       head->next->next=head;
+       head->prev = head->next;
+       head->next=NULL;
+       return newHead;
     }
 };
 
