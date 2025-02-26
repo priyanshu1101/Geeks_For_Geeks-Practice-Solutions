@@ -8,32 +8,26 @@ using namespace std;
 class Solution {
   public:
     // Function to detect cycle in an undirected graph.
-    bool detect(vector<vector<int>>& adj,int node,vector<bool> &visited){
-        queue<pair<int,int>> que;
-        que.push({-1,node});
-        visited[node]=true;
-        while(!que.empty()){
-            pair<int,int> top = que.front();
-            que.pop();
-            int parent = top.first,curr=top.second;
-            for(int adjNode : adj[curr]){
-                if(!visited[adjNode]){
-                    visited[adjNode]=true;
-                    que.push({curr,adjNode});
-                }
-                else if(adjNode!=parent){
+    bool detectCycle(vector<vector<int>>& adj,vector<bool> &visited,int node,int parent){
+        for(int adjNode: adj[node]){
+            if(!visited[adjNode]){
+                visited[adjNode]=true;
+                if(detectCycle(adj,visited,adjNode,node))
                     return true;
-                }
+            }
+            else if(parent!=adjNode){
+                return true;
             }
         }
         return false;
     }
     bool isCycle(vector<vector<int>>& adj) {
         vector<bool> visited(adj.size(),false);
-        for(int i=0;i<visited.size();i++){
+        for(int i=0;i<adj.size();i++){
             if(!visited[i]){
-                bool detectCycle = detect(adj,i,visited);
-                if(detectCycle) return true;
+                visited[i]=true;
+                bool detect = detectCycle(adj,visited,i,-1);
+                if(detect) return true;
             }
         }
         return false;
