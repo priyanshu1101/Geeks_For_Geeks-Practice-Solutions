@@ -8,30 +8,32 @@ using namespace std;
 class Solution {
   public:
     // Function to return list containing vertices in Topological order.
+    void dfs(vector<vector<int>>& adj,vector<bool> &visited,stack<int>& record,int curr){
+        for(int adjNode:adj[curr]){
+            if(!visited[adjNode]){
+                visited[adjNode]=true;
+                dfs(adj,visited,record,adjNode);
+                record.push(adjNode);
+            }
+        }
+    }
     vector<int> topologicalSort(vector<vector<int>>& adj) {
-        vector<int> indegree(adj.size(),0);
-        for(int i=0;i<adj.size();i++){
-            for(int adjNode:adj[i]){
-                indegree[adjNode]++;
-            }
-        }
-        queue<int> que;
-        for(int i=0;i<indegree.size();i++){
-            if(indegree[i]==0) que.push(i);
-        }
-        vector<int> topologicalSortAns;
-        while(!que.empty()){
-            int top=que.front();
-            topologicalSortAns.push_back(top);
-            que.pop();
-            for(int adjNode:adj[top]){
-                indegree[adjNode]--;
-                if(indegree[adjNode]==0){
-                    que.push(adjNode);
-                }
-            }
-        }
-        return topologicalSortAns;
+       vector<bool> visited(adj.size(),false);
+       stack<int> record;
+       vector<int> ans;
+       for(int i=0;i<adj.size();i++){
+           if(!visited[i]){
+               visited[i]=true;
+               dfs(adj,visited,record,i);
+               record.push(i);
+           }
+       }
+       while(!record.empty()){
+           int top=record.top();
+           record.pop();
+           ans.push_back(top);
+       }
+       return ans;
     }
 };
 
