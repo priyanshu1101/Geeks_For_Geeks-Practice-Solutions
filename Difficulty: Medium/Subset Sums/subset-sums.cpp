@@ -4,22 +4,25 @@ using namespace std;
 
 
 // } Driver Code Ends
+
 class Solution {
   public:
-    void ansFinder(vector<int>& arr,vector<int>& ans,int sum,int i){
+    vector<int> ans;
+    void dfs(vector<int>& arr,int i,int sum)
+    {
         if(i==arr.size()){
             ans.push_back(sum);
             return;
         }
-        ansFinder(arr,ans,sum+arr[i],i+1);
-        ansFinder(arr,ans,sum,i+1);
+        dfs(arr,i+1,sum+arr[i]);
+        dfs(arr,i+1,sum);
     }
     vector<int> subsetSums(vector<int>& arr) {
-        vector<int> ans;
-        ansFinder(arr,ans,0,0);
+        dfs(arr,0,0);
         return ans;
     }
 };
+
 
 //{ Driver Code Starts.
 
