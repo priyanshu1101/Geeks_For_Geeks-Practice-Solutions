@@ -8,28 +8,27 @@ using namespace std;
 class Solution {
   public:
     // Function to return list containing vertices in Topological order.
-    void dfs(vector<vector<int>>& adj,stack<int> &stk,int curr,vector<bool>& visited){
+    void dfs(int curr,vector<vector<int>>& adj,stack<int> &record,vector<bool> &visited){
         visited[curr]=true;
-        for(int adjNode:adj[curr]){
+        for(int adjNode: adj[curr]){
             if(!visited[adjNode]){
-                dfs(adj,stk,adjNode,visited);
+                dfs(adjNode,adj,record,visited);
             }
         }
-        stk.push(curr);
+        record.push(curr);
     }
     vector<int> topologicalSort(vector<vector<int>>& adj) {
+        stack<int> record;
         vector<int> ans;
-        stack<int> stk;
         vector<bool> visited(adj.size(),false);
         for(int i=0;i<adj.size();i++){
             if(!visited[i]){
-                dfs(adj,stk,i,visited);
+                dfs(i,adj,record,visited);
             }
         }
-        while(!stk.empty()){
-            int top=stk.top();
-            stk.pop();
-            ans.push_back(top);
+        while(!record.empty()){
+            ans.push_back(record.top());
+            record.pop();
         }
         return ans;
     }
