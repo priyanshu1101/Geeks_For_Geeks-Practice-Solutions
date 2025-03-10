@@ -5,30 +5,51 @@ using namespace std;
 
 // } Driver Code Ends
 
+class UnionSet{
+    public:
+    vector<int> size;
+    vector<int> parent;
+    UnionSet(int V){
+        parent.resize(V);
+        for(int i=0;i<V;i++){
+            parent[i]=i;
+        }
+    }
+    int findParent(int node){
+        if(node==parent[node]) return node;
+        return parent[node]=findParent(parent[node]);
+    }
+    void addToUnion(int node,int headNode){
+        if(findParent(node)==findParent(headNode)) return;
+        else parent[findParent(node)]=findParent(headNode);
+    }
+};
+
 class Solution {
   public:
     // Function to find sum of weights of edges of the Minimum Spanning Tree.
     int spanningTree(int V, vector<vector<int>> adj[]) {
         // code here
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> que;
-        vector<bool> visited(V,false);
-        int sum=0;
-        que.push({0,0});
-        while(!que.empty()){
-            pair<int,int> top = que.top();
-            que.pop();
-            int dist = top.first, node = top.second;
-            if(visited[node]) continue;
-            visited[node]=true;
-            sum+=dist;
-            for(auto adjNodePair:adj[node]){
-                int adjNode=adjNodePair[0],distance = adjNodePair[1];
-                if(!visited[adjNode]){
-                    que.push({distance,adjNode});
-                }
+        set<pair<int,pair<int,int>>> st;
+        for(int i=0;i<V;i++){
+            for(auto adjNodeData:adj[i]){
+                int src=i,des = adjNodeData[0], distance = adjNodeData[1];
+                if(st.find({distance,{des,src}})==st.end())
+                    st.insert({distance,{src,des}});
             }
         }
-        return sum;
+        int ans=0;
+        UnionSet* obj = new UnionSet(V);
+        for(auto itr=st.begin();itr!=st.end();itr++){
+            pair<int,pair<int,int>> topPair=*itr;
+            int src=topPair.second.first,des = topPair.second.second, distance = topPair.first;
+            if(obj->findParent(src)==obj->findParent(des)) continue;
+            else{
+                obj->addToUnion(src,des);
+                ans+=distance;
+            }
+        }
+        return ans;
     }
 };
 
