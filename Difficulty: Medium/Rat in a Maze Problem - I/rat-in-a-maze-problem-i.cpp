@@ -4,38 +4,35 @@ using namespace std;
 
 
 // } Driver Code Ends
+
 // User function template for C++
 
 class Solution {
   public:
+    vector<vector<int>> directions={{1,0},{0,1},{-1,0},{0,-1}};
+    vector<char> compass={'D','R','U','L'};
     vector<string> ans;
-    vector<pair<int,int>> directions={{-1,0},{0,-1},{1,0},{0,1}};
-    vector<char> dir = {'U','L','D','R'};
-    void ratInAMaze(vector<vector<int>> &mat,int i,int j,string subans){
-        if(i>=mat.size() || i<0 || j>=mat[0].size() || j<0) return;
-        if(i==mat.size()-1 && j==mat[0].size()-1){
+    void traversal(vector<vector<int>> &mat,int i,int j,string subans){
+        if(i==mat.size() || j==mat.size() || i<0 || j<0) return;
+        if(i==mat.size()-1 && j==mat.size()-1){
             ans.push_back(subans);
             return;
         }
         for(int k=0;k<directions.size();k++){
-            int indexi = i+directions[k].first,indexj=j+directions[k].second;
-            if(indexi<mat.size() && indexj<mat[0].size() && mat[indexi][indexj]==1){
-                mat[i][j]=-1;
-                ratInAMaze(mat,indexi,indexj,subans+dir[k]);
+            int newI=i+directions[k][0],newJ=j+directions[k][1];
+            if(newI<mat.size() && newJ<mat.size() && newI>=0 && newJ>=0 && mat[newI][newJ]==1){
+                mat[i][j]=0;
+                traversal(mat,newI,newJ,subans+compass[k]);
                 mat[i][j]=1;
             }
         }
     }
     vector<string> findPath(vector<vector<int>> &mat) {
-        ratInAMaze(mat,0,0,"");
+        traversal(mat,0,0,"");
         return ans;
     }
 };
-// [[1,1,1,0,1],
-//  [1,0,1,1,1],
-//  [0,0,1,1,1],
-//  [1,0,0,1,1],
-//  [1,0,0,0,1]]
+
 
 
 //{ Driver Code Starts.
